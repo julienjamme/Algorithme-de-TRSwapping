@@ -101,7 +101,8 @@ $geo \gets geo\_level[j]$\;
    }{
    $geo\_sup \gets NULL$\;
   }
-$risks\_geo \gets risks[, scope\_risk == geo]$\;
+$risks\_geo \gets risks[scope\_risk == geo,]$\;
+$donors\_geo \gets donors[ident \notin risks[scope\_risk > geo,ident],]$\;
 
 $s \gets 1$\;
 
@@ -119,11 +120,12 @@ $i \gets 1$\;
 
 $stats \gets stats\_risks[i,]$: Grp de similarités * geo traité \;
 $g \gets stats[1,geo]$: Entité géo. concernée\;
+$g\_sup \gets stats[1,geo\_sup]$: Entité géo. concernée au niveau supérieur\;
 % $n\_draw \gets stats[1,n\_draw]$: Nb. de donneurs à tirer à l'itér. $i$\;
 
 $concern\_risks \gets merge(risks\_geo, stats, by = similar+geo)$\;
 % : ind. à risq partageant similarités et géo traités à l'itér $i$\
-$concern\_donors \gets merge(risks\_geo, stats, by = similar)[geo \neq g,]$\;
+$concern\_donors \gets merge(donors\_geo[geo_sup \neq g\_sup,] , stats, by = similar)[geo \neq g,]$\;
 % : donneurs partageant similarités traités et localisés dans les autres entités géographiques de niveau $geo\_level = geo$ identique et partageant également le même niveau $geo\_sup$
 
 $nr$: nb d'ind. à risq à traiter\;
@@ -144,7 +146,7 @@ $res[[j]][[similar]][[i]] \gets data(orig = orig, dest =$\;
 }
 }
 
-Mettre à jour $donors$ et $risks\_geo$ en retirant les donneurs et les ind. à risque tirés\;
+Mettre à jour $donors\_geo$ et $risks\_geo$ en retirant les donneurs et les ind. à risque tirés\;
 $i \gets i + 1$\;
 
 }
@@ -154,6 +156,7 @@ $s \gets s + 1$\;
 }
 
 Mettre à jour $risks$ en retirant les ind. retirés de $risks\_geo$\;
+Mettre à jour $donors$ en retirant les ind. retirés de $donors\_geo$\;
 $j \gets j + 1$\;
 
 
